@@ -40,17 +40,24 @@
 
             <!---page-->
             <ngb-pagination
+                class="d-flex justify-content-center"
                 [collectionSize]="collectionSize"
-                [maxSize]="5"
                 [rotate]="true"
+                [(page)]="currentPage"
                 [boundaryLinks]="true"
                 [pageSize]="pageSize"
                 (pageChange)="onPageChange($event)"
-            ></ngb-pagination>
+            >
+                <ng-template ngbPaginationPrevious>Prev</ng-template>
+                <ng-template ngbPaginationNext>Next</ng-template>
+            </ngb-pagination>
 
             <hr />
 
-            <pre>目前頁數: {{ currentPage }} 總筆數:{{ collectionSize }}  </pre>
+            <pre>
+                <span class="d-flex justify-content-center">
+                    頁數: {{ currentPage }} / {{totalPage}} 筆數: {{ collectionSize  }}  本頁筆數: {{ Customers.length }}</span>
+            </pre>
         </div>
     </div>
 </div>

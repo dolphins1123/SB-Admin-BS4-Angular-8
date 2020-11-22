@@ -14,6 +14,7 @@ export class TablesComponent implements OnInit {
     constructor(private dataService: DataService) {}
     queryModel = new QueryModel();
     currentPage = 1;
+    totalPage = 0;
     pageSize = 10;
 
     displayedColumns = ['客戶ID', '公司名稱', '城市', '地址', '管理'];
@@ -25,6 +26,7 @@ export class TablesComponent implements OnInit {
         this.dataService.GetData(this.queryModel).then((res) => {
             this.Customers = res.result;
             this.collectionSize = res.totalRowCount;
+            this.totalPage = res.totalPage;
             console.log('init  data source=', res);
             console.log('init Customers=', this.Customers);
         });
@@ -36,6 +38,7 @@ export class TablesComponent implements OnInit {
 
         this.dataService.GetData(this.queryModel).then((res) => {
             this.Customers = res.result;
+            this.totalPage = res.totalPage;
             this.collectionSize = res.totalRowCount;
         });
     }
@@ -45,14 +48,13 @@ export class TablesComponent implements OnInit {
     }
 
     public onPageChange(pageNum: any): void {
-        // console.log('pageNum=', pageNum);
-        this.pageSize = this.pageSize * (pageNum - 1);
-
+        console.log('pageNum=', pageNum);
         this.currentPage = pageNum;
         this.queryModel.pageIndex = pageNum;
 
         this.dataService.GetData(this.queryModel).then((res) => {
             this.Customers = res.result;
+            this.totalPage = res.totalPage;
             this.collectionSize = res.totalRowCount;
             console.log('collectionSize=', this.collectionSize);
         });
