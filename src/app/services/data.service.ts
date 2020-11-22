@@ -27,16 +27,16 @@ export class DataService implements OnInit {
     // }
 
     async GetData(model: QueryModel) {
+        console.log(' GetData model=', model);
         const data: any = await this.GetJSONData(model);
         console.log(' GetDataGetData() data=', data);
         return data;
     }
 
     GetJSONData(model: QueryModel): any {
-        // this.queryModel.pageSize = 10;
-        // this.queryModel.pageIndex = 1;
-        //  const url = `http://127.0.0.1/crud/GetList?model.pageSize=${model.pageSize}&model.pageIndex=${model.pageIndex}`;
-        const url = `http://127.0.0.1/crud/GetList?model.pageSize=10&model.pageIndex=1`;
+        console.log(' GetJSONData model=', model);
+        const url = `http://127.0.0.1/crud/GetList?model.pageSize=${model.pageSize}&model.pageIndex=${model.pageIndex}`;
+
         const data = this.http.get<any>(url).toPromise();
         return data;
     }

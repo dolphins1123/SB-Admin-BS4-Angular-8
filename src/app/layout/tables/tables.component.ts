@@ -12,7 +12,7 @@ import { routerTransition } from '../../router.animations';
 })
 export class TablesComponent implements OnInit {
     constructor(private dataService: DataService) {}
-    queryModel: QueryModel;
+    queryModel = new QueryModel();
     currentPage = 1;
     pageSize = 10;
 
@@ -21,21 +21,7 @@ export class TablesComponent implements OnInit {
     Customers: UserData[];
     JsonData: any;
 
-    public onPageChange(pageNum: number): void {
-        this.pageSize = this.pageSize * (pageNum - 1);
-    }
-
-    public changePagesize(num: number): void {
-        this.pageSize = this.pageSize + num;
-    }
     ngOnInit() {
-        // if (this.queryModel.pageSize == null) {
-        //     this.queryModel.pageSize = 10;
-        // }
-        // if (this.queryModel.pageIndex == null) {
-        //     this.queryModel.pageIndex = 1;
-        // }
-
         this.dataService.GetData(this.queryModel).then((res) => {
             this.Customers = res.result;
             this.collectionSize = res.totalRowCount;
@@ -44,20 +30,35 @@ export class TablesComponent implements OnInit {
         });
     }
 
-    qry() {
-        // this.queryModel.pageSize = 10;
-        // this.queryModel.pageIndex = 2;
-        console.log('this.queryModel=', this.queryModel);
+    QueryData() {
+        this.currentPage = 1;
+        this.queryModel.pageIndex = this.currentPage;
 
-        return;
-        // const P1 = this.dataService.GetData(this.queryModel);
-        // P1.then((res) => {
-        //     this.JsonData = res;
-        //     console.log('JsonData=', this.JsonData);
-        // });
+        this.dataService.GetData(this.queryModel).then((res) => {
+            this.Customers = res.result;
+            this.collectionSize = res.totalRowCount;
+        });
     }
 
     doEdit(row) {
         console.log('doedit', row);
+    }
+
+    public onPageChange(pageNum: any): void {
+        // console.log('pageNum=', pageNum);
+        this.pageSize = this.pageSize * (pageNum - 1);
+
+        this.currentPage = pageNum;
+        this.queryModel.pageIndex = pageNum;
+
+        this.dataService.GetData(this.queryModel).then((res) => {
+            this.Customers = res.result;
+            this.collectionSize = res.totalRowCount;
+            console.log('collectionSize=', this.collectionSize);
+        });
+    }
+
+    public changePagesize(num: number): void {
+        this.pageSize = this.pageSize + num;
     }
 }
