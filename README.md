@@ -67,3 +67,12 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ### 更新為後端分頁
 
 <img src='https://imgur.com/qCcfVwU.png' style="zoom:70%" />
+###  整合 SweetAlert2
+完成CRUD LIST
+
+<img src='https://imgur.com/uj4uXse.png' style="zoom:70%" />
+<img src='https://imgur.com/VDdui4H.png' style="zoom:70%" />
+<img src='https://imgur.com/K0LxTm4.png' style="zoom:70%" />
+
+
+
