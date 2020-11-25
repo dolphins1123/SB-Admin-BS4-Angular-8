@@ -9,12 +9,14 @@
                 <button (click)="QueryData()" class="btn btn-md btn-primary" type="button">
                     查詢
                 </button>
+
+                <button (click)="clearNew(); open(AddContent)" class="btn btn-primary">新增</button>
             </div>
             <div class="card-body table-responsive">
                 <table class="table table-hover table-striped">
                     <thead>
                         <tr>
-                            <th *ngFor="let columnNmae of displayedColumns">{{ columnNmae }}</th>
+                            <th *ngFor="let columnName of displayedColumns">{{ columnName }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -27,7 +29,7 @@
                                 <a
                                     class="btn btn-sm btn-primary"
                                     href="javascript:void(0)"
-                                    (click)="doEdit(UserData)"
+                                    (click)="doEdit(UserData); open(AddContent)"
                                     role="button"
                                     >編輯</a
                                 >
@@ -60,4 +62,181 @@
             </pre>
         </div>
     </div>
+    <!--新增Model-->
+    <ng-template #AddContent let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">{{ modalTitle }}</h4>
+            <button (click)="d('Cross click')" aria-label="Close" class="close" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!--modal  body-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <form role="form">
+                        <fieldset class="form-group">
+                            <label>客戶ID</label>
+                            <input
+                                class="form-control"
+                                placeHolder="客戶ID"
+                                maxlength="10"
+                                name="CustomerID"
+                                [(ngModel)]="Customer.CustomerID"
+                                [disabled]="ModalMode == 'upd'"
+                                required
+                            />
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label>公司名稱</label>
+                            <input
+                                name="CompanyName"
+                                [(ngModel)]="Customer.CompanyName"
+                                class="form-control"
+                                placeholder="公司名稱"
+                                maxlength="10"
+                            />
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label>地址</label>
+                            <input
+                                type="text"
+                                name="Address"
+                                [(ngModel)]="Customer.Address"
+                                class="form-control"
+                                placeholder="地址"
+                                maxlength="50"
+                            />
+                        </fieldset>
+
+                        <div class="form-group">
+                            <label>城市</label>
+                            <select class="form-control" name="City" [(ngModel)]="Customer.City">
+                                <option *ngFor="let city of Cities" [value]="city">{{ city }}</option>
+                            </select>
+                        </div>
+
+                        <!-- <fieldset class="form-group">
+                            <label for="exampleInputFile">File input</label>
+                            <input class="form-control-file" id="exampleInputFile" type="file" />
+                        </fieldset> -->
+
+                        <fieldset class="form-group">
+                            <label>Region</label>
+                            <textarea name="Region" [(ngModel)]="Customer.Region" class="form-control" rows="3">
+                            </textarea>
+                        </fieldset>
+
+                        <!--<div class="form-group">
+                            <label>Checkboxes</label>
+                            <div class="checkbox">
+                                <label> <input type="checkbox" value="" /> Checkbox 1 </label>
+                            </div>
+                            <div class="checkbox">
+                                <label> <input type="checkbox" value="" /> Checkbox 2 </label>
+                            </div>
+                            <div class="checkbox">
+                                <label> <input type="checkbox" value="" /> Checkbox 3 </label>
+                            </div>
+                        </div>
+
+                       <div class="form-group">
+                            <label>Inline Checkboxes</label>
+                            <label class="checkbox-inline"> <input type="checkbox" />1 </label>
+                            <label class="checkbox-inline"> <input type="checkbox" />2 </label>
+                            <label class="checkbox-inline"> <input type="checkbox" />3 </label>
+                        </div>
+
+                        <fieldset class="form-group">
+                            <label>Radio Buttons</label>
+                            <div class="radio">
+                                <label>
+                                    <input
+                                        checked=""
+                                        id="optionsRadios1"
+                                        name="optionsRadios"
+                                        type="radio"
+                                        value="option1"
+                                    />
+                                    Radio 1
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input id="optionsRadios2" name="optionsRadios" type="radio" value="option2" />
+                                    Radio 2
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input id="optionsRadios3" name="optionsRadios" type="radio" value="option3" />
+                                    Radio 3
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-group">
+                            <label>Inline Radio Buttons</label>
+                            <label class="radio-inline">
+                                <input
+                                    checked=""
+                                    id="optionsRadiosInline1"
+                                    name="optionsRadiosInline"
+                                    type="radio"
+                                    value="option1"
+                                />1
+                            </label>
+                            <label class="radio-inline">
+                                <input
+                                    id="optionsRadiosInline2"
+                                    name="optionsRadiosInline"
+                                    type="radio"
+                                    value="option2"
+                                />2
+                            </label>
+                            <label class="radio-inline">
+                                <input
+                                    id="optionsRadiosInline3"
+                                    name="optionsRadiosInline"
+                                    type="radio"
+                                    value="option3"
+                                />3
+                            </label>
+                        </fieldset>
+
+                        <div class="form-group">
+                            <label>Selects</label>
+                            <select class="form-control">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+
+                        <fieldset class="form-group">
+                            <label>Multiple Selects</label>
+                            <select class="form-control" multiple="">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </fieldset> -->
+
+                        <button class="btn btn-primary" type="button" (click)="doSubmit()">送出</button>
+                        <button class="btn btn-secondary" type="reset">清除</button>
+                    </form>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <div class="modal-footer">
+            <button (click)="c('Close click')" class="btn btn-secondary" type="button">關閉</button>
+        </div>
+    </ng-template>
 </div>
