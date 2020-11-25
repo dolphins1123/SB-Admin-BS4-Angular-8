@@ -6,11 +6,17 @@
             <div class="card-header">
                 Striped Rows
                 <hr />
-                <button (click)="QueryData()" class="btn btn-md btn-primary" type="button">
+
+                <!-- <button (click)="simpleAlert()">Simple Alert</button>
+                <button (click)="alertWithSuccess()">Alert with Success</button> -->
+
+                <button (click)="QueryData()" class="btn btn-md btn-primary fa fa-search" type="button">
                     查詢
                 </button>
 
-                <button (click)="clearNew(); open(AddContent)" class="btn btn-primary">新增</button>
+                <button (click)="clearNew(); open(AddContent)" class="btn btn-success fa fa-user-plus">
+                    新增
+                </button>
             </div>
             <div class="card-body table-responsive">
                 <table class="table table-hover table-striped">
@@ -27,13 +33,19 @@
                             <td>{{ UserData.Address }}</td>
                             <td>
                                 <a
-                                    class="btn btn-sm btn-primary"
+                                    class="btn btn-sm btn-primary fa fa-edit"
                                     href="javascript:void(0)"
                                     (click)="doEdit(UserData); open(AddContent)"
                                     role="button"
                                     >編輯</a
                                 >
-                                <a class="btn btn-sm btn-danger" href="javascript:void(0)" role="button">刪除</a>
+                                <a
+                                    class="btn btn-sm btn-danger fa fa-trash"
+                                    href="javascript:void(0)"
+                                    (click)="doDelete(UserData)"
+                                    role="button"
+                                    >刪除</a
+                                >
                             </td>
                         </tr>
                     </tbody>
@@ -82,8 +94,8 @@
                                 placeHolder="客戶ID"
                                 maxlength="10"
                                 name="CustomerID"
-                                [(ngModel)]="Customer.CustomerID"
-                                [disabled]="ModalMode == 'upd'"
+                                [(ngModel)]="editRow.CustomerID"
+                                [disabled]="isAddMode == false"
                                 required
                             />
                         </fieldset>
@@ -92,7 +104,7 @@
                             <label>公司名稱</label>
                             <input
                                 name="CompanyName"
-                                [(ngModel)]="Customer.CompanyName"
+                                [(ngModel)]="editRow.CompanyName"
                                 class="form-control"
                                 placeholder="公司名稱"
                                 maxlength="10"
@@ -104,7 +116,7 @@
                             <input
                                 type="text"
                                 name="Address"
-                                [(ngModel)]="Customer.Address"
+                                [(ngModel)]="editRow.Address"
                                 class="form-control"
                                 placeholder="地址"
                                 maxlength="50"
@@ -113,7 +125,7 @@
 
                         <div class="form-group">
                             <label>城市</label>
-                            <select class="form-control" name="City" [(ngModel)]="Customer.City">
+                            <select class="form-control" name="City" [(ngModel)]="editRow.City">
                                 <option *ngFor="let city of Cities" [value]="city">{{ city }}</option>
                             </select>
                         </div>
@@ -125,7 +137,7 @@
 
                         <fieldset class="form-group">
                             <label>Region</label>
-                            <textarea name="Region" [(ngModel)]="Customer.Region" class="form-control" rows="3">
+                            <textarea name="Region" [(ngModel)]="editRow.Region" class="form-control" rows="3">
                             </textarea>
                         </fieldset>
 
@@ -228,15 +240,17 @@
                             </select>
                         </fieldset> -->
 
-                        <button class="btn btn-primary" type="button" (click)="doSubmit()">送出</button>
-                        <button class="btn btn-secondary" type="reset">清除</button>
+                        <button class="btn btn-primary" type="button" (click)="doSubmit()">
+                            送出
+                        </button>
+                        <button class="btn btn-secondary" type="reset" [hidden]="!isAddMode">清除</button>
                     </form>
                 </div>
             </div>
             <!-- /.row -->
         </div>
         <div class="modal-footer">
-            <button (click)="c('Close click')" class="btn btn-secondary" type="button">關閉</button>
+            <button (click)="c('Close click'); QueryData()" class="btn btn-secondary" type="button">關閉</button>
         </div>
     </ng-template>
 </div>

@@ -5,6 +5,7 @@ import { QueryModel } from '../../model/QueryModel';
 import { routerTransition } from '../../router.animations';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+import Swal from 'ngx-angular8-sweetalert2';
 @Component({
     selector: 'app-tables',
     templateUrl: './tables.component.html',
@@ -18,13 +19,17 @@ export class TablesComponent implements OnInit {
     currentPage = 1;
     totalPage = 0;
     pageSize = 10;
-    ModalMode = ''; // 編輯模式  add / upd
+
+    isAddMode = false; // add mode ?
     modalTitle = 'TITLE';
     displayedColumns = ['客戶ID', '公司名稱', '城市', '地址', '管理'];
     collectionSize = 0;
 
     Customers: UserData[];
     public Customer = new UserData();
+
+    public editRow = new UserData();
+
     JsonData: any;
 
     Cities = ['臺北', '臺中', '高雄'];
@@ -34,9 +39,15 @@ export class TablesComponent implements OnInit {
             this.Customers = res.result;
             this.collectionSize = res.totalRowCount;
             this.totalPage = res.totalPage;
-            console.log('init  data source=', res);
-            console.log('init Customers=', this.Customers);
         });
+    }
+
+    simpleAlert() {
+        Swal.fire('Hello world!');
+    }
+
+    alertWithSuccess() {
+        Swal.fire('Thank you...', 'You submitted succesfully!', 'success');
     }
 
     QueryData() {
@@ -51,10 +62,10 @@ export class TablesComponent implements OnInit {
     }
 
     doEdit(row) {
-        this.ModalMode = 'upd';
+        this.isAddMode = false;
         this.modalTitle = '編輯資料';
-        console.log('編輯列', row);
-        this.Customer = row;
+        console.log('編輯列', this.isAddMode, row);
+        this.editRow = row;
     }
 
     public onPageChange(pageNum: any): void {
@@ -85,9 +96,9 @@ export class TablesComponent implements OnInit {
         );
     }
     clearNew() {
-        this.ModalMode = 'add';
+        this.isAddMode = true;
         this.modalTitle = '新增資料';
-        this.Customer = new UserData();
+        this.editRow = new UserData();
     }
 
     private getDismissReason(reason: any): string {
@@ -102,25 +113,58 @@ export class TablesComponent implements OnInit {
 
     doSubmit() {
         console.log('do submit');
-        console.log(this.Customer);
+        console.log(this.editRow);
 
-        if (this.ModalMode === 'add') {
-            this.dataService.DoCreate(this.Customer).then((res) => {
+        if (this.isAddMode === true) {
+            this.dataService.DoCreate(this.editRow).then((res) => {
                 console.log('create res=', res);
-                // todo
-                // if success
                 if (res.success === true) {
-                    // alert
                     this.QueryData();
+                    Swal.fire('訊息提示', '新增成功', 'success');
+                    this.editRow = new UserData();
+                    // this.modalService.dismissAll('Dismissed after saving data');
                 } else {
-                    // show error
+                    Swal.fire('訊息提示', '新增失敗! ' + res.message, 'error');
                 }
             });
         } else {
             // upd
-            this.dataService.DoUpdate(this.Customer).then((res) => {
+            this.dataService.DoUpdate(this.editRow).then((res) => {
                 console.log('DoUpdate res=', res);
+                if (res.success === true) {
+                    this.QueryData();
+                    Swal.fire('訊息提示', '更新成功', 'success');
+                } else {
+                    Swal.fire('訊息提示', '更新失敗! ' + res.message, 'error');
+                }
             });
         }
+    }
+
+    doDelete(row) {
+        Swal.fire({
+            title: '提示視窗',
+            text: '確定刪除嗎?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '刪除',
+            cancelButtonText: '取消'
+        }).then((result) => {
+            if (result.value) {
+                // call  services  del  method
+                this.dataService.DoDelete(row.CustomerID).then((res) => {
+                    console.log('Do DoDelete res=', res.success);
+                    console.log('res.success type=', typeof res.success);
+                    if (res.success === true) {
+                        this.QueryData();
+                        Swal.fire('訊息提示', '刪除成功', 'success');
+                    } else {
+                        Swal.fire('訊息提示', '刪除失敗! ' + res.message, 'error');
+                    }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // Swal.fire('Cancelled', 'Your imaginary file is safe :)', 'error');
+            }
+        });
     }
 }

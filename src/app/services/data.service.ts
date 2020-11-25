@@ -11,7 +11,6 @@ import { QueryModel } from '../model/QueryModel';
 // TODO   TOKEN AUTH
 export class DataService implements OnInit {
     jsonData: any;
-    
     queryModel: QueryModel;
     constructor(private http: HttpClient) {}
     ngOnInit() {}
@@ -32,6 +31,13 @@ export class DataService implements OnInit {
         console.log(' DoUpdate() data=', data);
         return data;
     }
+
+    public async DoDelete(idList: string) {
+        const data: any = await this.DeleteData(idList);
+        console.log(' DoDelete idList=', idList);
+        return data;
+    }
+
     // ---------------------------------------
     private GetJSONData(model: QueryModel): any {
         console.log(' GetJSONData model=', model);
@@ -54,6 +60,14 @@ export class DataService implements OnInit {
         const url = 'http://127.0.0.1/crud/api/Customer/Update';
 
         const data = this.http.post<any>(url, model).toPromise();
+        return data;
+    }
+
+    private DeleteData(idList: string): any {
+        console.log(' DeleteData model=', idList);
+        const url = `http://127.0.0.1/crud/api/Customer/Delete?idList=${idList}`;
+
+        const data = this.http.get<any>(url).toPromise();
         return data;
     }
 }
