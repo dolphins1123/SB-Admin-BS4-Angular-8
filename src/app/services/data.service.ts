@@ -8,11 +8,10 @@ import { QueryModel } from '../model/QueryModel';
     providedIn: 'root'
 })
 
-//TODO   TOKEN AUTH
+// TODO   TOKEN AUTH
 export class DataService implements OnInit {
     jsonData: any;
-    UserDatas: UserData[] = [];
-
+    
     queryModel: QueryModel;
     constructor(private http: HttpClient) {}
     ngOnInit() {}

@@ -18,7 +18,7 @@ export class TablesComponent implements OnInit {
     currentPage = 1;
     totalPage = 0;
     pageSize = 10;
-    ModalMode = ''; //編輯模式  add/ upd
+    ModalMode = ''; // 編輯模式  add / upd
     modalTitle = 'TITLE';
     displayedColumns = ['客戶ID', '公司名稱', '城市', '地址', '管理'];
     collectionSize = 0;
