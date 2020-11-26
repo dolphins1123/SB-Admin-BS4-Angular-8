@@ -3,9 +3,10 @@ import { DataService } from '../../services/data.service';
 import { UserData } from '../../model/domain';
 import { QueryModel } from '../../model/QueryModel';
 import { routerTransition } from '../../router.animations';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { ModalDismissReasons, NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'ngx-angular8-sweetalert2';
+import { DatePickerComponent } from '../bs-component/components/date-picker/date-picker.component';
+
 @Component({
     selector: 'app-tables',
     templateUrl: './tables.component.html',
@@ -13,6 +14,9 @@ import Swal from 'ngx-angular8-sweetalert2';
     animations: [routerTransition()]
 })
 export class TablesComponent implements OnInit {
+    now = new Date();
+    demoDate: NgbDateStruct;
+    defaultTime = { hour: 13, minute: 30 };
     closeResult: string;
     constructor(private dataService: DataService, private modalService: NgbModal) {}
     queryModel = new QueryModel();
@@ -40,6 +44,11 @@ export class TablesComponent implements OnInit {
             this.collectionSize = res.totalRowCount;
             this.totalPage = res.totalPage;
         });
+        this.selectToday();
+    }
+
+    selectToday() {
+        this.demoDate = { year: this.now.getFullYear(), month: this.now.getMonth() + 1, day: this.now.getDate() };
     }
 
     simpleAlert() {
@@ -65,6 +74,7 @@ export class TablesComponent implements OnInit {
         this.isAddMode = false;
         this.modalTitle = '編輯資料';
         console.log('編輯列', this.isAddMode, row);
+
         this.editRow = row;
     }
 
@@ -113,6 +123,7 @@ export class TablesComponent implements OnInit {
 
     doSubmit() {
         console.log('do submit');
+        console.log('get demoDate value=', this.demoDate);
         console.log(this.editRow);
 
         if (this.isAddMode === true) {
@@ -166,5 +177,11 @@ export class TablesComponent implements OnInit {
                 // Swal.fire('Cancelled', 'Your imaginary file is safe :)', 'error');
             }
         });
+    }
+
+    // date picker  改變日期後 監聽回傳DATE
+    onChangedDate(chgDate: any) {
+        console.log('父組件 收到 demoDate=', chgDate);
+        this.demoDate = chgDate;
     }
 }
